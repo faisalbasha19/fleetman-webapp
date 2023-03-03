@@ -1,5 +1,10 @@
 pipeline {
-   agent any
+   agent {
+        kubernetes {
+            defaultContainer 'jnlp'
+            yamlFile 'agentPod.yaml'
+        }
+    }
 
    environment {
      // You must set the following environment variables
