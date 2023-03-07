@@ -31,7 +31,7 @@ pipeline {
       stage('Docker Build') {
          steps {
              container('docker') {
-                    sh 'chmod 666 unix:///var/run/docker.sock'
+                    sh 'chmod 666 /var/run/docker.sock'
                     sh 'docker image build -t ${REPOSITORY_TAG} .'
                 }
          }         
