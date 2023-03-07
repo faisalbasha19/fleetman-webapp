@@ -5,7 +5,26 @@ metadata:
   labels:
     app: agentPod
 spec:
-  containers:
+  containers:  
+  - name: docker
+    image: docker:19.03.1
+    readinessProbe:
+      exec:
+        command: [sh, -c, "ls -S /var/run/docker.sock"]
+    command:
+    - sleep
+    args:
+    - 99d
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
+  - name: docker-daemon
+    image: docker:19.03.1-dind
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
     - name: maven
       image: maven:latest
       command:
@@ -14,19 +33,9 @@ spec:
       volumeMounts:
         - name: m2
           mountPath: /root/.m2
-    - name: docker
-      image: docker:latest
-      command:
-        - cat
-      tty: true
-      privileged: true
-      volumeMounts:
-        - name: dockersock
-          mountPath: /var/run/docker.sock
   volumes:
-    - name: dockersock
-      hostPath:
-        path: /var/run/docker.sock
+    - name: docker-socket
+      emptyDir: {}
     - name: m2
       hostPath:
         path: /root/.m2
