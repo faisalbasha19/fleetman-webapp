@@ -27,15 +27,31 @@ pipeline {
          }
       }
 
-      stage('Build and Push Image') {
+      stage('Docker Build') {
          steps {
              container('docker') {
                     sh 'docker image build -t ${REPOSITORY_TAG} .'
                     sh 'docker push ${REPOSITORY_TAG'
                 }
-         }
+         }         
+      }
+      
+      stage('Docker login'){
+         steps {
+             container('docker') {
+                    sh 'docker login -u admin -p Helxxe1234$$ qa-nexus-docker.mtnsat.io'         
+                }
+         }         
       }
 
+      stage('Docker Push') {
+         steps {
+             container('docker') {
+                    sh 'docker push ${REPOSITORY_TAG'
+                }
+         }
+      }
+      
       stage('Deploy to Cluster') {
           steps {
             sh 'envsubst < ${WORKSPACE}/deploy.yaml | kubectl apply -f -'
