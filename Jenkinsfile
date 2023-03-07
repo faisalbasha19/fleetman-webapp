@@ -31,7 +31,6 @@ pipeline {
          steps {
              container('docker') {
                     sh 'docker image build -t ${REPOSITORY_TAG} .'
-                    sh 'docker push ${REPOSITORY_TAG'
                 }
          }         
       }
