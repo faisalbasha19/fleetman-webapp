@@ -8,6 +8,9 @@ spec:
   containers:  
   - name: docker
     image: docker:19.03.1
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
     readinessProbe:
       exec:
         command: [sh, -c, "ls -S /var/run/docker.sock"]
@@ -20,22 +23,16 @@ spec:
       mountPath: /var/run
   - name: docker-daemon
     image: docker:19.03.1-dind
+    env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
     securityContext:
       privileged: true
     volumeMounts:
-    - name: docker-socket
-      mountPath: /var/run
-    - name: maven
-      image: maven:latest
-      command:
-        - cat
-      tty: true
-      volumeMounts:
-        - name: m2
-          mountPath: /root/.m2
+    - name: cache
+      mountPath: /var/lib/docker
   volumes:
-    - name: docker-socket
-      emptyDir: {}
-    - name: m2
-      hostPath:
-        path: /root/.m2
+  - name: cache
+    hostPath:
+      path: /tmp
+      type: Directory
