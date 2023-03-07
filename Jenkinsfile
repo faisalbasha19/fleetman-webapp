@@ -12,7 +12,8 @@ pipeline {
      // YOUR_DOCKERHUB_USERNAME (it doesn't matter if you don't have one)
      
      SERVICE_NAME = "fleetman-webapp"
-      REPOSITORY_TAG="qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID}"
+     REPOSITORY_TAG="qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID}"
+     NEXUS_CRED = credentials('nexus')
    }
 
    stages {
@@ -38,7 +39,9 @@ pipeline {
       stage('Docker login'){
          steps {
              container('docker') {
-                    sh 'docker login -u admin -p Helxxe1234$$ qa-nexus-docker.mtnsat.io'         
+                   withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'password', usernameVariable: 'username')]) {
+                          sh 'docker login -u username -p password qa-nexus-docker.mtnsat.io'                               
+                  }
                 }
          }         
       }
