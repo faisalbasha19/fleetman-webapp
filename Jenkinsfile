@@ -27,6 +27,23 @@ pipeline {
             sh 'echo No build required for Webapp.'
          }
       }
+      
+      stage('Make Image') {
+            environment {
+                PATH        = "/busybox:$PATH"
+                REGISTRY    = 'qa-docker-nexus.mtnsat.io' // Configure your own registry
+                REPOSITORY  = 'caladreas'
+                IMAGE       = 'cat'
+            }
+            steps {
+                container(name: 'kaniko', shell: '/busybox/sh') {
+                    sh '''#!/busybox/sh
+                    /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${REPOSITORY_TAG}
+                    '''
+                }
+            }
+        }
+      
 
       stage('Docker Build') {
          steps {
@@ -39,14 +56,14 @@ pipeline {
       
       stage('Docker login'){
          steps {
-             container('docker') {
+             container('docker login') {
                    withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'password', usernameVariable: 'username')]) {
                           sh 'docker login -u username -p password qa-nexus-docker.mtnsat.io'                               
                   }
                 }
          }         
       }
-
+      
       stage('Docker Push') {
          steps {
              container('docker') {
