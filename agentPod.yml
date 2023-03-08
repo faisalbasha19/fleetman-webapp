@@ -1,9 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: img
-  annotations:
-    container.apparmor.security.beta.kubernetes.io/img: unconfined  
+  name: img  
 spec:
   containers:
   - name: kaniko
