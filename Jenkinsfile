@@ -36,7 +36,7 @@ pipeline {
                 IMAGE       = 'cat'
             }
             steps {
-                container(name: 'kaniko', shell: '/busybox/sh') {
+                container(name: 'img', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
                     /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${REPOSITORY_TAG}
                     '''
