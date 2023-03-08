@@ -12,10 +12,10 @@ spec:
     args:
     - 99d
     volumeMounts:
-    - name: jenkins-docker-cfg
+    - name: kanikocfg
       mountPath: /kaniko/.docker
 volumes:
-- name: jenkins-docker-cfg
+- name: kanikocfg
   projected:
     sources:
     - secret:
