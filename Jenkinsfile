@@ -34,7 +34,7 @@ podTemplate(yaml: '''
                   volumeMounts:
                   - name: docker-socket
                     mountPath: /var/run
-''') {
+''') {  
   node(POD_LABEL) {
 
        stage('Git sCM Checkout') {
