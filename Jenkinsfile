@@ -6,7 +6,6 @@ def workdir = "${workspace}/src/localhost/docker-jenkins/"
 
 def repoName = "qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID}"
 def tag = "$repoName:latest"
-def scannerHome = tool 'sonarQubeScanner'
 
 podTemplate(yaml: '''
               apiVersion: v1
@@ -43,6 +42,9 @@ podTemplate(yaml: '''
         }
     
         stage('Sonarqube') {
+          
+            def scannerHome = tool 'sonarQubeScanner'
+          
             withSonarQubeEnv('sonarQube') {
                     sh "${scannerHome}/bin/sonar-scanner"
             }
