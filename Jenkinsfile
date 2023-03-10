@@ -40,12 +40,27 @@ podTemplate(yaml: '''
        stage('Git sCM Checkout') {
             git branch: 'main', credentialsId: 'gitssh-1', url: 'https://github.com/faisalbasha19/fleetman-webapp'
         }
+    
+        stage('Sonarqube') {
+            environment {
+                scannerHome = tool 'sonarQubeScanner'
+            }
+            steps {
+                withSonarQubeEnv('sonarQube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }    
             
         stage('docker build') {
                container('docker'){
                   sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t qa-docker-nexus.mtnsat.io/dockerrepo/${SERVICE_NAME}:${BUILD_ID} .'                   
                }
         }
+    
         stage('docker login') {
                 container('docker') {
                   sh 'docker login -u admin -p admin qa-docker-nexus.mtnsat.io'
