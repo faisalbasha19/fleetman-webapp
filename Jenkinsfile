@@ -45,13 +45,11 @@ podTemplate(yaml: '''
             environment {
                 scannerHome = tool 'sonarQubeScanner'
             }
-            steps {
-                withSonarQubeEnv('sonarQube') {
+            withSonarQubeEnv('sonarQube') {
                     sh "${scannerHome}/bin/sonar-scanner"
-                }
-                timeout(time: 10, unit: 'MINUTES') {
+            }
+            timeout(time: 10, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
-                }
             }
         }    
             
