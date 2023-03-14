@@ -50,15 +50,16 @@ podTemplate(yaml: '''
         }
     
         stage('Sonarqube') {
-          
-            def scannerHome = tool 'sonarQubeScanner'
-          
-            withSonarQubeEnv('sonarQube') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-            }
-            timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-            }
+          container('node'){
+               def scannerHome = tool 'sonarQubeScanner'
+
+                withSonarQubeEnv('sonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                }             
+          } 
         }    
             
         stage('docker build') {
