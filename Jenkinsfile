@@ -15,6 +15,12 @@ podTemplate(yaml: '''
                 - name: docker-socket
                   emptyDir: {}
                 containers:
+                - name: node
+                  image: node:latest
+                  command:
+                  - sleep
+                  args:
+                  - 99d
                 - name: docker
                   image: docker:19.03.1
                   readinessProbe:
