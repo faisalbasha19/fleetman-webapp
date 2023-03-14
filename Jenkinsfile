@@ -42,9 +42,6 @@ podTemplate(yaml: '''
                     mountPath: /var/run
 ''') {  
   
-  tools {
-    nodejs 'nodejs'
-  }
   
   node(POD_LABEL) {
 
