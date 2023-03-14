@@ -41,6 +41,11 @@ podTemplate(yaml: '''
                   - name: docker-socket
                     mountPath: /var/run
 ''') {  
+  
+  tools {
+    nodejs 'nodejs'
+  }
+  
   node(POD_LABEL) {
 
        stage('Git sCM Checkout') {
