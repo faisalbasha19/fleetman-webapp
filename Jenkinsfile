@@ -53,9 +53,7 @@ podTemplate(yaml: '''
                def scannerHome = tool 'sonarQubeScanner'
 
                 withSonarQubeEnv('sonarQube') {
-                            container('node'){
-                                  sh "${scannerHome}/bin/sonar-scanner"
-                            } 
+                        sh "${scannerHome}/bin/sonar-scanner"
                 }
           
                 timeout(time: 10, unit: 'MINUTES') {
